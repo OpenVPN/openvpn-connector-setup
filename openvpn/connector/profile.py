@@ -1,8 +1,8 @@
 #  OpenVPN Connector Setup
 #      - Configure OpenVPN 3 Linux for OpenVPN Cloud
 #
-#  Copyright (C) 2020         OpenVPN Inc. <sales@openvpn.net>
-#  Copyright (C) 2020         David Sommerseth <davids@openvpn.net>
+#  Copyright (C) 2020 - 2021  OpenVPN Inc. <sales@openvpn.net>
+#  Copyright (C) 2020 - 2021  David Sommerseth <davids@openvpn.net>
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU Affero General Public License as
@@ -30,7 +30,7 @@ from urllib.parse import urljoin
 from openvpn.connector.token import DecodeToken
 
 
-OPENVPN_CLOUD_BASEURL='https://cloud-backend.openvpn.net/cvpn/api/v1/profiles/'
+OPENVPN_CLOUD_BASEURL='https://cloud-backend.openvpn.com/cvpn/api/v1/profiles/'
 if 'OPENVPN_CLOUD_BASEURL' in os.environ:
     OPENVPN_CLOUD_BASEURL=os.environ['OPENVPN_CLOUD_BASEURL']
 
