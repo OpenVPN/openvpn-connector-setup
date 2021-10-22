@@ -1,8 +1,8 @@
 #  OpenVPN Connector Setup
 #      - Configure OpenVPN 3 Linux for OpenVPN Cloud
 #
-#  Copyright (C) 2020         OpenVPN Inc. <sales@openvpn.net>
-#  Copyright (C) 2020         David Sommerseth <davids@openvpn.net>
+#  Copyright (C) 2020 - 2021  OpenVPN Inc. <sales@openvpn.net>
+#  Copyright (C) 2020 - 2021  David Sommerseth <davids@openvpn.net>
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU Affero General Public License as
@@ -31,6 +31,7 @@ setup(
     name = 'openvpn-connector-setup',
     version = ocs_version,
     packages=find_packages(),
+    install_requires = [ 'dbus-python', 'cryptography' ],
     entry_points = {
         'console_scripts': ['openvpn-connector-setup=openvpn.connector.main:main']
     },
