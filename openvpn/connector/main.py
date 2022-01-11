@@ -62,7 +62,7 @@ def main():
                      help='This value is provided by the OpenVPN Cloud web portal.')
     cli.add_argument('--name', metavar='NAME', nargs=1, default=['OpenVPN Cloud',],
                      help='Configuration profile name to use. Default: "OpenVPN Cloud"')
-    cli.add_argument('--config-filename', metavar='CONFIG_FILENAME', nargs=1, default=['connector.conf',],
+    cli.add_argument('--autoload-file-prefix', metavar='AUTOLOAD_FILE_PREFIX', nargs=1, default=['connector',],
                      help='Configuration filename to use. Default: connector.conf')
     cli.add_argument('--no-start', action='store_true',
                      help='Do not start and configure the profile to start at boot')
@@ -70,7 +70,7 @@ def main():
     cliopts = cli.parse_args(sys.argv[1:])
 
     token = None
-    cfg_filename = cliopts.config_filename[0]
+    autoload_prefix = cliopts.autoload_file_prefix[0]
     config_name = cliopts.name[0]
     start_config = not cliopts.no_start
 
@@ -125,6 +125,7 @@ profile and complete the configuration.\n""")
             config_dir = os.path.join(rootdir, 'etc','openvpn3','autoload')
             Path(config_dir).mkdir(parents=True, exist_ok=True)
 
+            cfg_filename = autoload_prefix + '.conf'
             cfg = os.path.join(config_dir, cfg_filename)
             print('Saving profile to "%s" ... ' % cfg, end='', flush=True)
             profile.Save(cfg)
