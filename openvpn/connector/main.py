@@ -22,7 +22,6 @@ import sys
 import os
 import argparse
 import dbus
-from pathlib import Path
 from enum import Enum
 from openvpn.connector.token import DecodeToken
 from openvpn.connector.profile import ProfileFetch, DecryptError, DownloadError
@@ -121,24 +120,12 @@ profile and complete the configuration.\n""")
         print('Done')
 
         if ConfigModes.AUTOLOAD == run_mode:
-            # Ensure proper destination directories exists
-            config_dir = os.path.join(rootdir, 'etc','openvpn3','autoload')
-            Path(config_dir).mkdir(parents=True, exist_ok=True)
-
-            cfg_filename = autoload_prefix + '.conf'
-            cfg = os.path.join(config_dir, cfg_filename)
-            print('Saving profile to "%s" ... ' % cfg, end='', flush=True)
-            profile.Save(cfg)
-            print('Done')
-
             # Generate the openvpn3-autoload configuration
-            autoload = AutoloadConfig(cfg)
-            print('Saving openvpn3-autoload config to "%s" ... ' % autoload.GetConfigFilename(),  end='', flush=True)
+            autoload = AutoloadConfig(profile, rootdir, autoload_prefix)
             autoload.SetName(config_name)
             autoload.SetAutostart(True)
             autoload.SetTunnelParams('persist', True)
             autoload.Save()
-            print('Done')
 
             if start_config is True and '/' == rootdir and os.geteuid() == 0:
                 service = SystemdServiceUnit(dbus.SystemBus(), 'openvpn3-autoload.service')

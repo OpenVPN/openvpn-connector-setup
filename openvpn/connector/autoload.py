@@ -1,8 +1,8 @@
 #  OpenVPN Connector Setup
 #      - Configure OpenVPN 3 Linux for OpenVPN Cloud
 #
-#  Copyright (C) 2020         OpenVPN Inc. <sales@openvpn.net>
-#  Copyright (C) 2020         David Sommerseth <davids@openvpn.net>
+#  Copyright (C) 2020 - 2022  OpenVPN Inc. <sales@openvpn.net>
+#  Copyright (C) 2020 - 2022  David Sommerseth <davids@openvpn.net>
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU Affero General Public License as
@@ -20,18 +20,24 @@
 
 import os
 import json
+from pathlib import Path
 
 class AutoloadConfig(object):
-    def __init__(self, cfg):
-        cfgdir = os.path.dirname(cfg)
-        main_cfgname = os.path.basename(cfg)
-        al_cfgname = "%s.autoload" % ".".join(main_cfgname.split('.')[:-1])
-        self._cfgname = os.path.join(cfgdir, al_cfgname)
+    def __init__(self, profile, rootdir, cfgname_prefix):
+        self._profile = profile
+        self._rootdir = rootdir
+
+        al_cfgname = '%s.autoload' % cfgname_prefix
+        self._autoload_file = os.path.join(rootdir, al_cfgname)
+
+        vpn_cfgname = '%s.conf' % cfgname_prefix
+        self._config_file =  os.path.join(rootdir, vpn_cfgname)
+
         self._properties = {}
 
 
-    def GetConfigFilename(self):
-        return self._cfgname
+    def GetAutoloadFilename(self):
+        return self._autoload_file
 
 
     def SetName(self, name):
@@ -52,10 +58,20 @@ class AutoloadConfig(object):
 
 
     def Save(self):
+        # Ensure proper destination directories exists
+        config_dir = os.path.join(self._rootdir, 'etc','openvpn3','autoload')
+        Path(config_dir).mkdir(parents=True, exist_ok=True)
+
+        print('Saving VPN configuration profile to "%s" ... ' % self._config_file, end='', flush=True)
+        self._profile.Save(self._config_file)
+        print('Done')
+
+        print('Saving openvpn3-autoload config to "%s" ... ' % self._autoload_file,  end='', flush=True)
         j = json.dumps(self._properties, indent=4)
-        fp = open(self._cfgname, 'wb')
+        fp = open(self._autoload_file, 'wb')
         fp.write(j.encode('utf-8'))
         fp.close()
+        print('Done')
 
 
     def _check_property_section(self, key, props):
