@@ -1,8 +1,8 @@
 #  OpenVPN Connector Setup
 #      - Configure OpenVPN 3 Linux for OpenVPN Cloud
 #
-#  Copyright (C) 2020         OpenVPN Inc. <sales@openvpn.net>
-#  Copyright (C) 2020         David Sommerseth <davids@openvpn.net>
+#  Copyright (C) 2020 - 2022  OpenVPN Inc. <sales@openvpn.net>
+#  Copyright (C) 2020 - 2022  David Sommerseth <davids@openvpn.net>
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU Affero General Public License as
@@ -44,15 +44,15 @@ def main():
                      help='Configuration profile name to use. Default: "OpenVPN Cloud"')
     cli.add_argument('--config-filename', metavar='CONFIG_FILENAME', nargs=1, default=['connector.conf',],
                      help='Configuration filename to use. Default: connector.conf')
-    cli.add_argument('--no-systemd', action='store_true',
-                     help='Do not start and configure openvpn3-autoload to start at boot')
+    cli.add_argument('--no-start', action='store_true',
+                     help='Do not start and configure the profile to start at boot')
 
     cliopts = cli.parse_args(sys.argv[1:])
 
     token = None
     cfg_filename = cliopts.config_filename[0]
     config_name = cliopts.name[0]
-    systemd_config = not cliopts.no_systemd
+    start_config = not cliopts.no_start
 
     # By default the root installation directory is /
     # but for development and debugging, the root directory
@@ -112,7 +112,7 @@ profile and complete the configuration.\n""")
         autoload.Save()
         print('Done')
 
-        if systemd_config is True and '/' == rootdir and os.geteuid() == 0:
+        if start_config is True and '/' == rootdir and os.geteuid() == 0:
             service = SystemdServiceUnit(dbus.SystemBus(), 'openvpn3-autoload.service')
             print('Enabling openvpn3-autoload.service during boot ... ', end='', flush=True)
             service.Enable()
