@@ -26,6 +26,7 @@ from enum import Enum
 from openvpn.connector.token import DecodeToken
 from openvpn.connector.profile import ProfileFetch, DecryptError, DownloadError
 from openvpn.connector.autoload import AutoloadConfig
+from openvpn.connector.configmgr import ConfigImport
 from openvpn.connector.systemd import SystemdServiceUnit
 
 # Add the traceback module if we're in debugging mode.
@@ -37,16 +38,21 @@ if 'OPENVPN_CLOUD_DEBUG' in os.environ:
 class ConfigModes(Enum):
     UNSET = 0
     AUTOLOAD = 1
+    UNITFILE = 2
 
     def to_string(v):
         if ConfigModes.UNSET == v:
             return '[UNSET]'
         elif ConfigModes.AUTOLOAD == v:
             return 'autoload'
+        elif ConfigModes.UNITFILE == v:
+            return 'systemd-unit'
 
     def parse(v):
         if 'autoload' == v:
             return ConfigModes.AUTOLOAD
+        elif 'systemd-unit' == v:
+            return ConfigModes.UNITFILE
         raise ValueError('Incorrect configuration mode: "%s"' % v)
 
 
@@ -119,6 +125,7 @@ profile and complete the configuration.\n""")
         profile.Download()
         print('Done')
 
+        systembus = dbus.SystemBus()
         if ConfigModes.AUTOLOAD == run_mode:
             # Generate the openvpn3-autoload configuration
             autoload = AutoloadConfig(profile, rootdir, autoload_prefix)
@@ -128,12 +135,39 @@ profile and complete the configuration.\n""")
             autoload.Save()
 
             if start_config is True and '/' == rootdir and os.geteuid() == 0:
-                service = SystemdServiceUnit(dbus.SystemBus(), 'openvpn3-autoload.service')
+                service = SystemdServiceUnit(systembus, 'openvpn3-autoload.service')
                 print('Enabling openvpn3-autoload.service during boot ... ', end='', flush=True)
                 service.Enable()
                 print('Done')
 
                 print('Starting openvpn3-autoload.service ... ', end='', flush=True)
+                service.Start()
+                print('Done')
+
+        elif ConfigModes.UNITFILE == run_mode:
+            cfgimport = ConfigImport(systembus, config_name)
+            cfgimport.Import(profile)
+
+            if os.geteuid() != 0:
+                cfgimport.EnableOwnershipTransfer()
+
+                if start_config is True:
+                    print('\n** INFO **   You did not run this command as root, so it will not\n'
+                          + '             start the connection automatically during boot.  To start\n'
+                          + '             at boot time, as root, run this command: \n\n'
+                          + '             # systemctl enable --now openvpn3-session@%s.service\n' %
+                          cfgimport.GetConfigName())
+            elif os.geteuid() == 0 and start_config is True:
+                service = SystemdServiceUnit(systembus,
+                                             'openvpn3-session@%s.service' % cfgimport.GetConfigName())
+
+                print('Enabling openvpn3-session@%s.service during boot ... ' % cfgimport.GetConfigName(),
+                      end='', flush=True)
+                service.Enable()
+                print('Done')
+
+                print('Starting openvpn3-session@%s.service ... ' % cfgimport.GetConfigName(),
+                      end='', flush=True)
                 service.Start()
                 print('Done')
 
