@@ -57,7 +57,7 @@ class ConfigModes(Enum):
 
 
 def main():
-    run_mode = ConfigModes.AUTOLOAD
+    run_mode = ConfigModes.UNITFILE
     cli = argparse.ArgumentParser(prog='openvpn-connector-setup',
                                   description='OpenVPN Connector Setup utility',
                                   usage='%s [options]' % os.path.basename(sys.argv[0]))
