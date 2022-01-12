@@ -119,13 +119,17 @@ profile and complete the configuration.\n""")
         # and a key used to decrypt the downloaded profile
         token = DecodeToken(token)
 
+        systembus = dbus.SystemBus()
+        cfgimport = None
+        if ConfigModes.UNITFILE == run_mode:
+            cfgimport = ConfigImport(systembus, config_name)
+
         # Download the profile from OpenVPN Cloud
         profile = ProfileFetch(token)
         print('Downloading OpenVPN Cloud Connector profile ... ', end='', flush=True)
         profile.Download()
         print('Done')
 
-        systembus = dbus.SystemBus()
         if ConfigModes.AUTOLOAD == run_mode:
             # Generate the openvpn3-autoload configuration
             autoload = AutoloadConfig(profile, rootdir, autoload_prefix)
@@ -145,7 +149,6 @@ profile and complete the configuration.\n""")
                 print('Done')
 
         elif ConfigModes.UNITFILE == run_mode:
-            cfgimport = ConfigImport(systembus, config_name)
             cfgimport.Import(profile)
 
             if os.geteuid() != 0:
