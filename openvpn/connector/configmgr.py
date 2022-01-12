@@ -33,6 +33,9 @@ class ConfigImport(object):
             print('** INFO **  Spaces stripped from configuration '
                   + 'name. New name: %s' % self.__config_name)
 
+        if self.__duplicate_check(self.__config_name) == True:
+            raise ValueError('Configuration profile name "%s" already exists' % self.__config_name)
+
 
     def GetConfigName(self):
         return self.__config_name
@@ -58,3 +61,16 @@ class ConfigImport(object):
         self._cfgobj.AccessGrant(0)
         print('Done')
 
+
+    def __duplicate_check(self, cfgname):
+        # NOTE: This will only look up configuration names
+        #       for the current user.  If more users have imported
+        #       configuration profiles with the same name, this
+        #       will not be detected here.  This will require
+        #       improved support within the net.openvpn.v3.configuraiton
+        #       D-Bus service.
+        for cfg in self.__cfgmgr.FetchAvailableConfigs():
+            n = cfg.GetProperty('name')
+            if cfgname == n:
+                return True
+        return False
