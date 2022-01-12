@@ -29,6 +29,10 @@ class ConfigImport(object):
         self.__config_name = cfgname.replace(' ', '')
         self._cfgobj = None
 
+        if "OpenVPN Cloud" != cfgname and self.__config_name != cfgname:
+            print('** INFO **  Spaces stripped from configuration '
+                  + 'name. New name: %s' % self.__config_name)
+
 
     def GetConfigName(self):
         return self.__config_name
