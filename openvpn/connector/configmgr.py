@@ -55,6 +55,12 @@ class ConfigImport(object):
             print('Configuration path: %s' % self._cfgobj.GetPath())
 
 
+    def EnableDCO(self):
+        print('Enabling Data Channel Offload (DCO) ... ', end='', flush=True)
+        self._cfgobj.SetProperty('dco', True)
+        print('Done')
+
+
     def EnableOwnershipTransfer(self):
         print('Granting root user access to profile ... ', end='', flush=True)
         self._cfgobj.SetProperty('transfer_owner_session', True)

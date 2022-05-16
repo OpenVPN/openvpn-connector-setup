@@ -71,6 +71,8 @@ def main():
                      help='Configuration filename to use. Default: connector.conf')
     cli.add_argument('--no-start', action='store_true',
                      help='Do not start and configure the profile to start at boot')
+    cli.add_argument('--dco', action='store_true',
+                     help='Use OpenVPN Data Channel Offload (DCO) by default')
 
     cliopts = cli.parse_args(sys.argv[1:])
 
@@ -78,6 +80,7 @@ def main():
     autoload_prefix = cliopts.autoload_file_prefix[0]
     config_name = cliopts.name[0]
     start_config = not cliopts.no_start
+    dco = cliopts.dco and True
 
     if cliopts.mode:
         run_mode = ConfigModes.parse(cliopts.mode[0])
@@ -138,6 +141,9 @@ profile and complete the configuration.\n""")
             autoload.SetTunnelParams('persist', True)
             autoload.Save()
 
+            if dco:
+                print('** WARNING ** The openvpn3-autoload mode does not support enabling DCO')
+
             if start_config is True and '/' == rootdir and os.geteuid() == 0:
                 service = SystemdServiceUnit(systembus, 'openvpn3-autoload.service')
                 print('Enabling openvpn3-autoload.service during boot ... ', end='', flush=True)
@@ -150,6 +156,9 @@ profile and complete the configuration.\n""")
 
         elif ConfigModes.UNITFILE == run_mode:
             cfgimport.Import(profile)
+
+            if cliopts.dco:
+                cfgimport.EnableDCO()
 
             if os.geteuid() != 0:
                 cfgimport.EnableOwnershipTransfer()
