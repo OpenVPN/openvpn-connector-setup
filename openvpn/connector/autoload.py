@@ -26,12 +26,13 @@ class AutoloadConfig(object):
     def __init__(self, profile, rootdir, cfgname_prefix):
         self._profile = profile
         self._rootdir = rootdir
+        self._config_dir = os.path.join(self._rootdir, 'etc','openvpn3','autoload')
 
         al_cfgname = '%s.autoload' % cfgname_prefix
-        self._autoload_file = os.path.join(rootdir, al_cfgname)
+        self._autoload_file = os.path.join(self._config_dir, al_cfgname)
 
         vpn_cfgname = '%s.conf' % cfgname_prefix
-        self._config_file =  os.path.join(rootdir, vpn_cfgname)
+        self._config_file =  os.path.join(self._config_dir, vpn_cfgname)
 
         self._properties = {}
 
@@ -59,8 +60,7 @@ class AutoloadConfig(object):
 
     def Save(self):
         # Ensure proper destination directories exists
-        config_dir = os.path.join(self._rootdir, 'etc','openvpn3','autoload')
-        Path(config_dir).mkdir(parents=True, exist_ok=True)
+        Path(self._config_dir).mkdir(parents=True, exist_ok=True)
 
         print('Saving VPN configuration profile to "%s" ... ' % self._config_file, end='', flush=True)
         self._profile.Save(self._config_file)
