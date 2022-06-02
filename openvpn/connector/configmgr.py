@@ -23,18 +23,20 @@ import dbus
 from openvpn3 import ConfigurationManager
 
 class ConfigImport(object):
-    def __init__(self, systembus, cfgname):
+    def __init__(self, systembus, cfgname, force=False):
         self.__system_bus = systembus
         self.__cfgmgr = ConfigurationManager(self.__system_bus)
         self.__config_name = cfgname.replace(' ', '')
         self._cfgobj = None
+        self.__overwrite = []
 
         if "OpenVPN Cloud" != cfgname and self.__config_name != cfgname:
             print('** INFO **  Spaces stripped from configuration '
                   + 'name. New name: %s' % self.__config_name)
 
-        if self.__duplicate_check(self.__config_name) == True:
-            raise ValueError('Configuration profile name "%s" already exists' % self.__config_name)
+        if self.__duplicate_check(self.__config_name, force) == True:
+            if not force:
+                raise ValueError('Configuration profile name "%s" already exists' % self.__config_name)
 
 
     def GetConfigName(self):
@@ -42,6 +44,13 @@ class ConfigImport(object):
 
 
     def Import(self, profile):
+        if len(self.__overwrite) > 0:
+            print('** Warning **  Removing old configuration profile with same name')
+            for cfg in self.__overwrite:
+                if 'OPENVPN_CLOUD_DEBUG' in os.environ:
+                    print('.. Removing %s' % cfg.GetPath())
+                cfg.Remove()
+
         print('Importing VPN configuration profile "%s" ... ' % self.__config_name,
               end='', flush=True)
         self._cfgobj = self.__cfgmgr.Import(self.__config_name,
@@ -68,15 +77,18 @@ class ConfigImport(object):
         print('Done')
 
 
-    def __duplicate_check(self, cfgname):
+    def __duplicate_check(self, cfgname, force):
         # NOTE: This will only look up configuration names
         #       for the current user.  If more users have imported
         #       configuration profiles with the same name, this
         #       will not be detected here.  This will require
-        #       improved support within the net.openvpn.v3.configuraiton
+        #       improved support within the net.openvpn.v3.configuration
         #       D-Bus service.
+        ret = False
         for cfg in self.__cfgmgr.FetchAvailableConfigs():
             n = cfg.GetProperty('name')
             if cfgname == n:
-                return True
-        return False
+                ret = True
+                if force:
+                    self.__overwrite.insert(0, cfg)
+        return ret

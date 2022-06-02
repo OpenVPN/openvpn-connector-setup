@@ -67,6 +67,8 @@ def main():
                      help='This value is provided by the OpenVPN Cloud web portal.')
     cli.add_argument('--name', metavar='NAME', nargs=1, default=['OpenVPN Cloud',],
                      help='Configuration profile name to use. Default: "OpenVPN Cloud"')
+    cli.add_argument('--force', action='store_true',
+                     help='Overwrite configuration profile if it already exists')
     cli.add_argument('--autoload-file-prefix', metavar='AUTOLOAD_FILE_PREFIX', nargs=1, default=['connector',],
                      help='Configuration filename to use. Default: connector.conf')
     cli.add_argument('--no-start', action='store_true',
@@ -79,6 +81,7 @@ def main():
     token = None
     autoload_prefix = cliopts.autoload_file_prefix[0]
     config_name = cliopts.name[0]
+    force = cliopts.force and True
     start_config = not cliopts.no_start
     dco = cliopts.dco and True
 
@@ -125,7 +128,7 @@ profile and complete the configuration.\n""")
         systembus = dbus.SystemBus()
         cfgimport = None
         if ConfigModes.UNITFILE == run_mode:
-            cfgimport = ConfigImport(systembus, config_name)
+            cfgimport = ConfigImport(systembus, config_name, force)
 
         # Download the profile from OpenVPN Cloud
         profile = ProfileFetch(token)
