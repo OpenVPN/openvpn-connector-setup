@@ -18,4 +18,4 @@
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 
-ocs_version='3'
+ocs_version='4rc2'
