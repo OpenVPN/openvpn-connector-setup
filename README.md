@@ -4,12 +4,12 @@ openvpn-connector-setup
 The `openvpn-connector-setup` tool used to configure the
 [OpenVPN 3 Linux client](https://community.openvpn.net/openvpn/wiki/OpenVPN3Linux)
 to connect as a connector in an
-[OpenVPN Cloud](https://openvpn.net/cloud-docs/installing-connector-for-linux/) managed
-environment.
+[CloudConnexa™](https://openvpn.net/cloud-docs/owner/connectors/connector-user-guides/installing-a-connector-for-linux.html)
+managed environment.
 
 Before this tool can be used, a connector must already be configured in the
-[OpenVPN Cloud portal](https://openvpn.cloud/).  As part of this step, the
-web portal will provide you with a setup token value.  This token is
+[CloudConnexa™ portal](https://myaccount.openvpn.com/).  As part of this step,
+the web portal will provide you with a setup token value.  This token is
 mandatory and needed for this tool to configure the host it is being run on.
 
 
@@ -19,35 +19,35 @@ By default this tool will:
 * Download a VPN client configuration profile
 * Configure this VPN profile to be used by `openvpn3-autoload` at boot time
 * Enable and start the `openvpn3-autoload.service` systemd unit.  This will
-  connect this host to the OpenVPN Cloud instantly and ensure it connects
+  connect this host to CloudConnexa instantly and ensure it connects
   automatically each time the host is rebooted.
 
 
 How to use it
 -------------
 First, configure a new connector in the
-[OpenVPN Cloud portal](https://cloud.openvpn.com/).  When the portal provides
-you with a setup token, run the script:
+[CloudConnexa portal](https://myaccount.openvpn.com/).  When the portal
+provides you with a setup token, run the script:
 
     [root@host: ~] # openvpn-connector-setup
-    OpenVPN Cloud Connector Setup
+    CloudConnexa™ Connector Setup
 
-    This utility is used to configure this host as an OpenVPN Cloud Connector.
-    Before this utility can be run, you must have configured a connector in
-    the OpenVPN Cloud web portal where an setup token is provided.  This
-    token is used by this utility to download the proper VPN configuration
-    profile and complete the configuration.
-    
+    This utility is used to configure this host as an OpenVPN Connector
+    for CloudConnexa.  Before this utility can be run, you must have
+    configured a connector in the CloudConnexa web portal where an setup
+    token is provided.  This token is used by this utility to download the
+    proper VPN configuration profile and complete the configuration.
+
     Enter setup token: <PROVIDED_TOKEN_VALUE>
-    
-    Downloading OpenVPN Cloud Connector profile ... Done
-    Importing VPN configuration profile "OpenVPNCloud" ... Done
-    Enabling openvpn3-session@OpenVPNCloud.service during boot ... Done
-    Starting openvpn3-session@OpenVPNCloud.service ... Done
+
+    Downloading CloudConnexa connector profile ... Done
+    Importing VPN configuration profile "CloudConnexa" ... Done
+    Enabling openvpn3-session@CloudConnexa.service during boot ... Done
+    Starting openvpn3-session@CloudConnexa.service ... Done
     [root@host: ~] #
 
 At this point everything should be configured and a VPN connection is
-established to the OpenVPN Cloud service.
+established to the CloudConnexa service.
 
 It is also possible to provide the setup token on the command line:
 
@@ -60,10 +60,10 @@ Options
 |------------------------------------|-------------------------------------------------------------------------------------------------------------|
 |-h, --help                          | show a help message and exit                                                                                |
 |--mode `MODE`                       | Valid values: _systemd-unit_ (default), _autoload_ - uses openvpn3-autoload to start the connection at boot |
-|--token `TOKEN_VALUE`               | This value is provided by the OpenVPN Cloud we portal.                                                      |
-|--name `NAME`                       | Configuration profile name to use. Default: _"OpenVPNCloud"_                                                |
+|--token `TOKEN_VALUE`               | This value is provided by the CloudConnexa web portal.                                                     |
+|--name `NAME`                       | Configuration profile name to use. Default: _"CloudConnexa"_                                                |
 |--force                             | Overwrite existing imported profiles                                                                        |
-|--autoload-file-prefix  `PREFIX`    | Configuration filename to use in the `/etc/openvpn3/autoload/` directory. Default: _OpenVPNCloud_           |
+|--autoload-file-prefix  `PREFIX`    | Configuration filename to use in the `/etc/openvpn3/autoload/` directory. Default: _CloudConnexa_           |
 |--no-start                          | Do not configure the profile to start at boot                                                               |
 |--dco                               | Use the OpenVPN Data Channel Offload (DCO) by default (unavailable with _autoload_ mode)                    |
 

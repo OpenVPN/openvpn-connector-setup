@@ -1,5 +1,5 @@
 #  OpenVPN Connector Setup
-#      - Configure OpenVPN 3 Linux for OpenVPN Cloud
+#      - Configure OpenVPN 3 Linux for CloudConnexa™
 #
 #  SPDX-License-Identifier: AGPL-3.0-only
 #
@@ -27,13 +27,13 @@ setup(
 
     author='OpenVPN Inc',
     author_email='info@openvpn.net',
-    description='OpenVPN Cloud Connector setup utility',
+    description='CloudConnexa™ connector setup utility',
     long_description=long_description,
     long_description_content_type='text/markdown',
-    keywords='openvpn-cloud openvpn-connector openvpn vpn',
-    url='https://openvpn.cloud/',
+    keywords='cloudconnexa openvpn-cloud openvpn-connector openvpn vpn',
+    url='https://myaccount.openvpn.com/',
     project_urls={
-        "Source code": "https://github.com/OpenVPN/openvpn-connector-setup",
+        "Source code": "https://codeberg.org/OpenVPN/openvpn-connector-setup",
     },
     classifiers=[
         'License :: OSI Approved :: AGPLv3',

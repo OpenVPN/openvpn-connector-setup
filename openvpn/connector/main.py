@@ -1,5 +1,5 @@
 #  OpenVPN Connector Setup
-#      - Configure OpenVPN 3 Linux for OpenVPN Cloud
+#      - Configure OpenVPN 3 Linux for CloudConnexa™
 #
 #  SPDX-License-Identifier: AGPL-3.0-only
 #
@@ -53,9 +53,9 @@ def main():
     cli.add_argument('--mode', metavar='MODE', nargs=1, action='store',
                      help='Defines how configuration profiles are imported and stored (default: %s)' % ConfigModes.to_string(run_mode))
     cli.add_argument('--token', metavar='TOKEN_VALUE', nargs=1,
-                     help='This value is provided by the OpenVPN Cloud web portal.')
-    cli.add_argument('--name', metavar='NAME', nargs=1, default=['OpenVPN Cloud',],
-                     help='Configuration profile name to use. Default: "OpenVPN Cloud"')
+                     help='This value is provided by the CloudConnexa web portal.')
+    cli.add_argument('--name', metavar='NAME', nargs=1, default=['CloudConnexa',],
+                     help='Configuration profile name to use. Default: "CloudConnexa"')
     cli.add_argument('--force', action='store_true',
                      help='Overwrite configuration profile if it already exists')
     cli.add_argument('--autoload-file-prefix', metavar='AUTOLOAD_FILE_PREFIX', nargs=1, default=['connector',],
@@ -95,13 +95,13 @@ def main():
         sys.exit(2)
 
     if cliopts.token is None:
-        print("""OpenVPN Cloud Connector Setup
+        print("""CloudConnexa™ Connector Setup
 
-This utility is used to configure this host as an OpenVPN Cloud Connector.
-Before this utility can be run, you must have configured a connector in
-the OpenVPN Cloud web portal where an setup token is provided.  This
-token is used by this utility to download the proper VPN configuration
-profile and complete the configuration.\n""")
+This utility is used to configure this host as an OpenVPN Connector
+for CloudConnexa.  Before this utility can be run, you must have
+configured a connector in the CloudConnexa web portal where an setup
+token is provided.  This token is used by this utility to download the
+proper VPN configuration profile and complete the configuration.\n""")
 
         token = input('Enter setup token: ')
         print("")
@@ -119,9 +119,9 @@ profile and complete the configuration.\n""")
         if ConfigModes.UNITFILE == run_mode:
             cfgimport = ConfigImport(systembus, config_name, force)
 
-        # Download the profile from OpenVPN Cloud
+        # Download the profile from CloudConnexa
         profile = ProfileFetch(token)
-        print('Downloading OpenVPN Cloud Connector profile ... ', end='', flush=True)
+        print('Downloading CloudConnexa Connector profile ... ', end='', flush=True)
         profile.Download()
         print('Done')
 

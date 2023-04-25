@@ -1,5 +1,5 @@
 #  OpenVPN Connector Setup
-#      - Configure OpenVPN 3 Linux for OpenVPN Cloud
+#      - Configure OpenVPN 3 Linux for CloudConnexa™
 #
 #  SPDX-License-Identifier: AGPL-3.0-only
 #

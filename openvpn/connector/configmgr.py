@@ -1,5 +1,5 @@
 #  OpenVPN Connector Setup
-#      - Configure OpenVPN 3 Linux for OpenVPN Cloud
+#      - Configure OpenVPN 3 Linux for CloudConnexa™
 #
 #  SPDX-License-Identifier: AGPL-3.0-only
 #
@@ -19,7 +19,7 @@ class ConfigImport(object):
         self._cfgobj = None
         self.__overwrite = []
 
-        if "OpenVPN Cloud" != cfgname and self.__config_name != cfgname:
+        if self.__config_name != cfgname:
             print('** INFO **  Spaces stripped from configuration '
                   + 'name. New name: %s' % self.__config_name)
 

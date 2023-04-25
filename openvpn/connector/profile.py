@@ -1,5 +1,5 @@
 #  OpenVPN Connector Setup
-#      - Configure OpenVPN 3 Linux for OpenVPN Cloud
+#      - Configure OpenVPN 3 Linux for CloudConnexa™
 #
 #  SPDX-License-Identifier: AGPL-3.0-only
 #
@@ -41,7 +41,7 @@ class DownloadError(Exception):
 
 
 class DecryptProfile(object):
-    """Decrypt an encrypted OpenVPN Cloud profile"""
+    """Decrypt an encrypted CloudConnexa profile"""
 
     def __init__(self, password, key_len=32, iterations=25000):
         self._password = password
@@ -108,7 +108,7 @@ class DecryptProfile(object):
 
 
 class ProfileFetch(object):
-    """Download an encrypted OpenVPN Cloud configuration profile"""
+    """Download an encrypted CloudConnexa configuration profile"""
 
     def __init__(self, token, baseurl=OPENVPN_CLOUD_BASEURL):
         if not isinstance(token, DecodeToken):
@@ -118,7 +118,7 @@ class ProfileFetch(object):
 
 
     def Download(self):
-        """Downloads an encrypted OpenVPN Cloud client profile and decrypt it"""
+        """Downloads an encrypted CloudConnexa client profile and decrypt it"""
         res = None
         try:
             dl_url = urljoin(self.__baseurl, self.__token.GetFileRef())

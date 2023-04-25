@@ -1,5 +1,5 @@
 #  OpenVPN Connector Setup
-#      - Configure OpenVPN 3 Linux for OpenVPN Cloud
+#      - Configure OpenVPN 3 Linux for CloudConnexa™
 #
 #  SPDX-License-Identifier: AGPL-3.0-only
 #
@@ -10,7 +10,7 @@
 from base64 import b64decode, b64encode
 
 class DecodeToken(object):
-    """Decode the OpenVPN Cloud setup token"""
+    """Decode the CloudConnexa setup token"""
     def __init__(self, token, split_point=40):
         #
         # Token format:  [ENCRYPTION_KEY][FILEREF]
