@@ -103,8 +103,13 @@ configured a connector in the CloudConnexa web portal where an setup
 token is provided.  This token is used by this utility to download the
 proper VPN configuration profile and complete the configuration.\n""")
 
-        token = input('Enter setup token: ')
-        print("")
+        try:
+            token = input('Enter setup token: ')
+            print("")
+        except KeyboardInterrupt:
+            print('\n\nAborting\n')
+            sys.exit(0)
+
     else:
         token = cliopts.token[0]
 
