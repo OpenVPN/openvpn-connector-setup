@@ -7,4 +7,4 @@
 #  Copyright (C) 2020 - 2023  David Sommerseth <davids@openvpn.net>
 #
 
-ocs_version='4'
+ocs_version='5'
