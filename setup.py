@@ -9,7 +9,7 @@
 
 from setuptools import setup, find_packages
 from os import path
-from version import ocs_version
+from openvpn.connector.version import ocs_version
 
 this_directory = path.abspath(path.dirname(__file__))
 with open(path.join(this_directory, 'README.md'), encoding='utf-8') as f:

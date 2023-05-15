@@ -12,6 +12,7 @@ import os
 import argparse
 import dbus
 from enum import Enum
+from openvpn.connector.version import ocs_version as version
 from openvpn.connector.token import DecodeToken
 from openvpn.connector.profile import ProfileFetch, DecryptError, DownloadError
 from openvpn.connector.autoload import AutoloadConfig
@@ -64,8 +65,15 @@ def main():
                      help='Do not start and configure the profile to start at boot')
     cli.add_argument('--dco', action='store_true',
                      help='Use OpenVPN Data Channel Offload (DCO) by default')
+    cli.add_argument('--version', action='store_true',
+                     help='Show openvpn-connector-setup version')
 
     cliopts = cli.parse_args(sys.argv[1:])
+
+    if cliopts.version:
+        print('OpenVPN Connector Setup Version %s' % version)
+        print('Program location: %s' % sys.argv[0])
+        sys.exit(0)
 
     token = None
     autoload_prefix = cliopts.autoload_file_prefix[0]
