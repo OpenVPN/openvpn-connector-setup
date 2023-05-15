@@ -116,7 +116,7 @@ proper VPN configuration profile and complete the configuration.\n""")
             print("")
         except KeyboardInterrupt:
             print('\n\nAborting\n')
-            sys.exit(0)
+            sys.exit(1)
 
     else:
         token = cliopts.token[0]
