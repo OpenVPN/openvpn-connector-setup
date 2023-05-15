@@ -18,6 +18,8 @@ from openvpn.connector.profile import ProfileFetch, DecryptError, DownloadError
 from openvpn.connector.autoload import AutoloadConfig
 from openvpn.connector.configmgr import ConfigImport
 from openvpn.connector.systemd import SystemdServiceUnit
+from openvpn.connector.polkit import PolkitAuthCheck
+
 
 # Add the traceback module if we're in debugging mode.
 # This will allow dumping of tracebacks when exceptions happens
@@ -138,6 +140,9 @@ proper VPN configuration profile and complete the configuration.\n""")
         profile.Download()
         print('Done')
 
+        pkac = PolkitAuthCheck(systembus)
+        admin_access = os.geteuid() == 0 or pkac.CheckAuthorization('org.freedesktop.systemd1.manage-unit-files')
+
         if ConfigModes.AUTOLOAD == run_mode:
             # Generate the openvpn3-autoload configuration
             autoload = AutoloadConfig(profile, rootdir, autoload_prefix)
@@ -149,7 +154,7 @@ proper VPN configuration profile and complete the configuration.\n""")
             if dco:
                 print('** WARNING ** The openvpn3-autoload mode does not support enabling DCO')
 
-            if start_config is True and '/' == rootdir and os.geteuid() == 0:
+            if start_config is True and '/' == rootdir and admin_access:
                 service = SystemdServiceUnit(systembus, 'openvpn3-autoload.service')
                 print('Enabling openvpn3-autoload.service during boot ... ', end='', flush=True)
                 service.Enable()
@@ -168,25 +173,26 @@ proper VPN configuration profile and complete the configuration.\n""")
             if os.geteuid() != 0:
                 cfgimport.EnableOwnershipTransfer()
 
-                if start_config is True:
+            if start_config is True:
+                if admin_access is True:
+                    service = SystemdServiceUnit(systembus,
+                                                 'openvpn3-session@%s.service' % cfgimport.GetConfigName())
+
+                    print('Enabling openvpn3-session@%s.service during boot ... ' % cfgimport.GetConfigName(),
+                          end='', flush=True)
+                    service.Enable()
+                    print('Done')
+
+                    print('Starting openvpn3-session@%s.service ... ' % cfgimport.GetConfigName(),
+                          end='', flush=True)
+                    service.Start()
+                    print('Done')
+                else:
                     print('\n** INFO **   You did not run this command as root, so it will not\n'
                           + '             start the connection automatically during boot.  To start\n'
                           + '             at boot time, as root, run this command: \n\n'
                           + '             # systemctl enable --now openvpn3-session@%s.service\n' %
                           cfgimport.GetConfigName())
-            elif os.geteuid() == 0 and start_config is True:
-                service = SystemdServiceUnit(systembus,
-                                             'openvpn3-session@%s.service' % cfgimport.GetConfigName())
-
-                print('Enabling openvpn3-session@%s.service during boot ... ' % cfgimport.GetConfigName(),
-                      end='', flush=True)
-                service.Enable()
-                print('Done')
-
-                print('Starting openvpn3-session@%s.service ... ' % cfgimport.GetConfigName(),
-                      end='', flush=True)
-                service.Start()
-                print('Done')
 
     except DownloadError as err:
         print('\n** ERROR ** ' + str(err))
