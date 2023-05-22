@@ -23,7 +23,7 @@ from openvpn.connector.polkit import PolkitAuthCheck
 
 # Add the traceback module if we're in debugging mode.
 # This will allow dumping of tracebacks when exceptions happens
-if 'OPENVPN_CLOUD_DEBUG' in os.environ:
+if 'OPENVPN_CONNECTOR_DEBUG' in os.environ:
     import traceback
 
 
@@ -87,7 +87,7 @@ def main():
     if cliopts.mode:
         run_mode = ConfigModes.parse(cliopts.mode[0])
 
-    if 'OPENVPN_CLOUD_DEBUG' in os.environ:
+    if 'OPENVPN_CONNECTOR_DEBUG' in os.environ:
         print('Run mode: %s' % ConfigModes.to_string(run_mode))
 
     # By default the root installation directory is /
@@ -204,7 +204,7 @@ proper VPN configuration profile and complete the configuration.\n""")
     except BaseException as err:
         print('\n** ERROR **  ' + str(err))
 
-        if 'OPENVPN_CLOUD_DEBUG' in os.environ:
+        if 'OPENVPN_CONNECTOR_DEBUG' in os.environ:
             print ('\nmain traceback:')
             print (traceback.format_exc())
 

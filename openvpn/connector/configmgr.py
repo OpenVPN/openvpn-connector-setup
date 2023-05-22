@@ -36,7 +36,7 @@ class ConfigImport(object):
         if len(self.__overwrite) > 0:
             print('** Warning **  Removing old configuration profile with same name')
             for cfg in self.__overwrite:
-                if 'OPENVPN_CLOUD_DEBUG' in os.environ:
+                if 'OPENVPN_CONNECTOR_DEBUG' in os.environ:
                     print('.. Removing %s' % cfg.GetPath())
                 cfg.Remove()
 
@@ -49,7 +49,7 @@ class ConfigImport(object):
         self._cfgobj.SetOverride('persist-tun', True)
         self._cfgobj.SetOverride('log-level', '5')
         print('Done')
-        if 'OPENVPN_CLOUD_DEBUG' in os.environ:
+        if 'OPENVPN_CONNECTOR_DEBUG' in os.environ:
             print('Configuration path: %s' % self._cfgobj.GetPath())
 
 
