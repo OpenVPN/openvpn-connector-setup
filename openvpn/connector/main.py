@@ -93,11 +93,11 @@ def main():
     # By default the root installation directory is /
     # but for development and debugging, the root directory
     # can be put into a chroot.  This is done via the
-    # OPENVPN_CLOUD_ROOT_DIR environment variable which
+    # OPENVPN_CONNECTOR_ROOT_DIR environment variable which
     # must be set before this script is run.
     rootdir = '/'
-    if 'OPENVPN_CLOUD_ROOT_DIR' in os.environ:
-        rootdir = os.environ['OPENVPN_CLOUD_ROOT_DIR']
+    if 'OPENVPN_CONNECTOR_ROOT_DIR' in os.environ:
+        rootdir = os.environ['OPENVPN_CONNECTOR_ROOT_DIR']
 
     if ConfigModes.AUTOLOAD == run_mode and '/' == rootdir and os.geteuid() != 0:
         print('%s must be run as root with "%s" as top level installation directory ' % (
