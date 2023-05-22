@@ -19,9 +19,9 @@ from urllib.parse import urljoin
 from openvpn.connector.token import DecodeToken
 
 
-OPENVPN_CLOUD_BASEURL='https://cloud-backend.openvpn.com/cvpn/api/v1/profiles/'
-if 'OPENVPN_CLOUD_BASEURL' in os.environ:
-    OPENVPN_CLOUD_BASEURL=os.environ['OPENVPN_CLOUD_BASEURL']
+CLOUDCONNEXA_BASEURL='https://cloud-backend.openvpn.com/cvpn/api/v1/profiles/'
+if 'CLOUDCONNEXA_BASEURL' in os.environ:
+    CLOUDCONNEXA_BASEURL=os.environ['CLOUDCONNEXA_BASEURL']
 
 #
 #  Various specific exceptions
@@ -110,7 +110,7 @@ class DecryptProfile(object):
 class ProfileFetch(object):
     """Download an encrypted CloudConnexa configuration profile"""
 
-    def __init__(self, token, baseurl=OPENVPN_CLOUD_BASEURL):
+    def __init__(self, token, baseurl=CLOUDCONNEXA_BASEURL):
         if not isinstance(token, DecodeToken):
             raise ValueError('token argument is not an DecodeToken object')
         self.__baseurl = baseurl
