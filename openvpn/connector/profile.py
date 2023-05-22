@@ -19,7 +19,7 @@ from urllib.parse import urljoin
 from openvpn.connector.token import DecodeToken
 
 
-CLOUDCONNEXA_BASEURL='https://cloud-backend.openvpn.com/cvpn/api/v1/profiles/'
+CLOUDCONNEXA_BASEURL='https://network-management-gw.openvpn.com/network-gate/api/v1/profiles/'
 if 'CLOUDCONNEXA_BASEURL' in os.environ:
     CLOUDCONNEXA_BASEURL=os.environ['CLOUDCONNEXA_BASEURL']
 
